@@ -36,7 +36,7 @@
    justify-content: center;
    align-items: center;
    flex: 1 1 auto;
-   width: 100%;
+   width: 60%;
  }
 
 /* fonts and type */
@@ -45,15 +45,15 @@
 
 .jspsych-display-element {
   font-family: 'Open Sans', 'Arial', sans-serif;
-  font-size: 18px;
-  line-height: 1.6em;
+  font-size: 30px;
+  line-height: 1.5em;
 }
 
 /* Form elements like input fields and buttons */
 
 input[type="text"] {
   font-family: 'Open Sans', 'Arial', sans-sefif;
-  font-size: 14px;
+  font-size: 30px;
 }
 
 /* borrowing Bootstrap style for btn elements, but combining styles a bit */
@@ -61,7 +61,7 @@ input[type="text"] {
   display: inline-block;
   padding: 6px 12px;
   margin: 0px 8px;
-  font-size: 14px;
+  font-size: 30px;
   font-weight: 400;
   font-family: 'Open Sans', 'Arial', sans-serif;
   cursor: pointer;
