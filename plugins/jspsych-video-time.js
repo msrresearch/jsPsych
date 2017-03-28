@@ -89,8 +89,36 @@ jsPsych.plugins["video-time"] = (function() {
     // it with the output of the function
     trial = jsPsych.pluginAPI.evaluateFunctionParameters(trial);
     
+
+    // display stimulus
+    var video_html = '<video id="jspsych-video-player" width="'+trial.width+'" height="'+trial.height+'" '
+    if(trial.autoplay){
+      video_html += "autoplay "
+    }
+    if(trial.controls){
+      video_html +="controls "
+    }
+    video_html+=">"
+    for(var i=0; i<trial.sources.length; i++){
+      var s = trial.sources[i];
+      var type = s.substr(s.lastIndexOf('.') + 1);
+      type = type.toLowerCase();
+      video_html+='<source src="'+s+'" type="video/'+type+'">';
+    }
+    video_html +="</video>"
+
+    display_element.innerHTML += video_html;
+
+    //show prompt if there is one
+    if (trial.prompt !== "") {
+      display_element.innerHTML += trial.prompt;
+    }
+
+    display_element.querySelector('#jspsych-video-player').onended = function(){
+      end_trial();
+    }
     
-        // store response
+            // store response
     var response = {
       rt: -1,
       key: -1
@@ -150,34 +178,6 @@ jsPsych.plugins["video-time"] = (function() {
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
     };
-
-    // display stimulus
-    var video_html = '<video id="jspsych-video-player" width="'+trial.width+'" height="'+trial.height+'" '
-    if(trial.autoplay){
-      video_html += "autoplay "
-    }
-    if(trial.controls){
-      video_html +="controls "
-    }
-    video_html+=">"
-    for(var i=0; i<trial.sources.length; i++){
-      var s = trial.sources[i];
-      var type = s.substr(s.lastIndexOf('.') + 1);
-      type = type.toLowerCase();
-      video_html+='<source src="'+s+'" type="video/'+type+'">';
-    }
-    video_html +="</video>"
-
-    display_element.innerHTML += video_html;
-
-    //show prompt if there is one
-    if (trial.prompt !== "") {
-      display_element.innerHTML += trial.prompt;
-    }
-
-    display_element.querySelector('#jspsych-video-player').onended = function(){
-      end_trial();
-    }
     
 
     //// end trial if time limit is set
