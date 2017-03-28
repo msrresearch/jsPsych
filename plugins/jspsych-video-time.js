@@ -88,6 +88,68 @@ jsPsych.plugins["video-time"] = (function() {
     // this evaluates the function and replaces
     // it with the output of the function
     trial = jsPsych.pluginAPI.evaluateFunctionParameters(trial);
+    
+    
+        // store response
+    var response = {
+      rt: -1,
+      key: -1
+    };
+    
+            // function to handle responses by the subject
+    var after_response = function(info) {
+
+      // after a valid response, the stimulus will have the CSS class 'responded'
+      // which can be used to provide visual feedback that a response was recorded
+      //display_element.querySelector('#jspsych-animation-image').className += ' responded';
+
+      response = {
+        key: info.key,
+        rt: info.rt,
+      };
+
+	  // 2250ms is the time according to schillbach after which answering is possible
+      if (trial.response_ends_trial && (response.rt > trial.respond_after)) {
+        end_trial();
+      }
+    };
+    
+            // start the response listener
+    if (trial.choices != jsPsych.NO_KEYS) {
+      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+        callback_function: after_response,
+        valid_responses: trial.choices,
+        rt_method: 'date',
+        persist: true,
+        allow_held_key: false
+      });
+    }
+ 
+
+    // function to end trial when it is time
+    var end_trial = function() {
+
+      // kill any remaining setTimeout handlers
+      jsPsych.pluginAPI.clearAllTimeouts();
+
+      // kill keyboard listeners
+      if (typeof keyboardListener !== 'undefined') {
+        jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+      }
+
+      // gather the data to store for the trial
+      var trial_data = {
+        "rt": response.rt,
+        "stimulus": trial.sources,
+        "key_press": response.key
+      };
+
+      // clear the display
+      display_element.innerHTML = '';
+
+      // move on to the next trial
+      jsPsych.finishTrial(trial_data);
+    };
 
     // display stimulus
     var video_html = '<video id="jspsych-video-player" width="'+trial.width+'" height="'+trial.height+'" '
@@ -106,73 +168,17 @@ jsPsych.plugins["video-time"] = (function() {
     }
     video_html +="</video>"
 
-    display_element.append(video_html);
+    display_element.innerHTML += video_html;
 
     //show prompt if there is one
     if (trial.prompt !== "") {
-      display_element.append(trial.prompt);
+      display_element.innerHTML += trial.prompt;
     }
 
-    document.getElementById('jspsych-video-player').onended = function(){
+    display_element.querySelector('#jspsych-video-player').onended = function(){
       end_trial();
     }
     
-    // store response
-    var response = {
-      rt: -1,
-      key: -1
-    };
-
-    // function to end trial when it is time
-    var end_trial = function() {
-
-      // kill any remaining setTimeout handlers
-      jsPsych.pluginAPI.clearAllTimeouts();
-
-      // kill keyboard listeners
-      if (typeof keyboardListener !== 'undefined') {
-        jsPsych.pluginAPI.cancelAllKeyboardResponses(keyboardListener);
-      }
-
-      // gather the data to store for the trial
-      var trial_data = {
-        "rt": response.rt,
-        "stimulus": trial.sources,
-        "key_press": response.key
-      };
-
-      // clear the display
-      display_element.html('');
-
-      // move on to the next trial
-      jsPsych.finishTrial(trial_data);
-    };
-    
-        // function to handle responses by the subject
-    var after_response = function(info) {
-
-      // after a valid response, the stimulus will have the CSS class 'responded'
-      // which can be used to provide visual feedback that a response was recorded
-      //$("#jspsych-single-stim-stimulus").addClass('responded');
-
-      response = info;
-
-	  // 2250ms is the time according to schillbach after which answering is possible
-      if (trial.response_ends_trial && (response.rt > trial.respond_after)) {
-        end_trial();
-      }
-    };
-    
-    // start the response listener
-    if (trial.choices != jsPsych.NO_KEYS) {
-      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
-        callback_function: after_response,
-        valid_responses: trial.choices,
-        rt_method: 'date',
-        persist: true,
-        allow_held_key: false
-      });
-    }
 
     //// end trial if time limit is set
     //if (trial.timing_response > 0) {

@@ -1,10 +1,10 @@
 /**
- * jspsych-single-stim
- * Josh de Leeuw
+ * jspsych-single-stim-title
+ * Sarah Schwoebel
  *
  * plugin for displaying a stimulus and getting a keyboard response
  *
- * documentation: docs.jspsych.org
+ *
  *
  **/
 
@@ -87,29 +87,25 @@ jsPsych.plugins["single-stim-title"] = (function() {
     trial.is_html = (typeof trial.is_html == 'undefined') ? false : trial.is_html;
     trial.prompt = trial.prompt || "";
     trial.title = trial.title || "";
-    
-    //show prompt if there is one
-    if (trial.title !== "") {
-      display_element.append(trial.title);
-    }
 
+    var new_html = '';
+    
+    // add title
+    new_html = trial.title;
+    
     // display stimulus
-    if (!trial.is_html) {
-      display_element.append($('<img>', {
-        src: trial.stimulus,
-        id: 'jspsych-single-stim-stimulus'
-      }));
-    } else {
-      display_element.append($('<div>', {
-        html: trial.stimulus,
-        id: 'jspsych-single-stim-stimulus'
-      }));
-    }
-        
-    //show prompt if there is one
-    if (trial.prompt !== "") {
-      display_element.append(trial.prompt);
-    }
+	if (!trial.is_html) {
+	  new_html += '<img src="'+trial.stimulus+'" id="jspsych-single-stim-stimulus"></img>';
+	} else {
+	  new_html += '<div id="jspsych-single-stim-stimulus">'+trial.stimulus+'</div>';
+	}
+
+
+    // add prompt
+    new_html += trial.prompt;
+
+    // draw
+    display_element.innerHTML = new_html;
 
     // store response
     var response = {
@@ -136,7 +132,7 @@ jsPsych.plugins["single-stim-title"] = (function() {
       };
 
       // clear the display
-      display_element.html('');
+      display_element.innerHTML = '';
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
@@ -147,7 +143,7 @@ jsPsych.plugins["single-stim-title"] = (function() {
 
       // after a valid response, the stimulus will have the CSS class 'responded'
       // which can be used to provide visual feedback that a response was recorded
-      $("#jspsych-single-stim-stimulus").addClass('responded');
+      display_element.querySelector('#jspsych-single-stim-stimulus').className += ' responded';
 
       // only record the first response
       if (response.key == -1) {
@@ -170,14 +166,14 @@ jsPsych.plugins["single-stim-title"] = (function() {
       });
     }
 
-    // hide image if timing is set
+    // hide stimulus if timing_stim is set
     if (trial.timing_stim > 0) {
       jsPsych.pluginAPI.setTimeout(function() {
-        $('#jspsych-single-stim-stimulus').css('visibility', 'hidden');
+        display_element.querySelector('#jspsych-single-stim-stimulus').style.visibility = 'hidden';
       }, trial.timing_stim);
     }
 
-    // end trial if time limit is set
+    // end trial if timing_response is set
     if (trial.timing_response > 0) {
       jsPsych.pluginAPI.setTimeout(function() {
         end_trial();
