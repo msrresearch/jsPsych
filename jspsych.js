@@ -714,7 +714,7 @@ window.jsPsych = (function() {
       if (keyboardNotAllowed) {
         go();
       } else {
-        DOM_target.innerHTML = '<div style=""><p>The experiment will launch in fullscreen mode when you click the button below.</p><button id="jspsych-fullscreen-btn" class="jspsych-btn">Launch Experiment</button></div>';
+        DOM_target.innerHTML = '<div style=""><p>Das Experiment wird im Vollbildmodus gestartet, sobald du "OK" dr\u00fcckst</p><button id="jspsych-fullscreen-btn" class="jspsych-btn">OK</button></div>';
         var listener = DOM_target.querySelector('#jspsych-fullscreen-btn').addEventListener('click', function() {
           var element = document.documentElement;
           if (element.requestFullscreen) {

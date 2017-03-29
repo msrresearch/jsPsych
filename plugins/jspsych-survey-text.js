@@ -80,7 +80,7 @@ jsPsych.plugins['survey-text'] = (function() {
     }
 
     // add submit button
-    display_element.innerHTML += '<button id="jspsych-survey-text-next" class="jspsych-btn jspsych-survey-text">Los geht\'s</button>';
+    display_element.innerHTML += '<button id="jspsych-survey-text-next" class="jspsych-btn jspsych-survey-text">OK</button>';
 
     display_element.querySelector('#jspsych-survey-text-next').addEventListener('click', function() {
       // measure response time

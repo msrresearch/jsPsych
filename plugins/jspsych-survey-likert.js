@@ -80,7 +80,7 @@ jsPsych.plugins['survey-likert'] = (function() {
     }
 
     // add submit button
-    form_element.innerHTML += '<input type="submit" id="jspsych-survey-likert-next" class="jspsych-survey-likert jspsych-btn" value="Submit Answers"></input>';
+    form_element.innerHTML += '<input type="submit" id="jspsych-survey-likert-next" class="jspsych-survey-likert jspsych-btn" value="OK"></input>';
 
     form_element.addEventListener('submit', function(e){
       e.preventDefault();
