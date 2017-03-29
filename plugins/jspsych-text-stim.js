@@ -124,7 +124,7 @@ jsPsych.plugins["text-stim"] = (function() {
         callback_function: after_response,
         valid_responses: trial.choices,
         rt_method: 'date',
-        persist: false,
+        persist: true,
         allow_held_key: false
       });
     }

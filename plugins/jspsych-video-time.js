@@ -10,6 +10,8 @@
 jsPsych.plugins["video-time"] = (function() {
 
   var plugin = {};
+  
+  jsPsych.pluginAPI.registerPreload('video-time', 'sources', 'video', function(t){ return !t.is_html || t.is_html == 'undefined'});
 
   plugin.info = {
     name: 'video-time',
@@ -124,36 +126,7 @@ jsPsych.plugins["video-time"] = (function() {
       key: -1
     };
     
-            // function to handle responses by the subject
-    var after_response = function(info) {
-
-      // after a valid response, the stimulus will have the CSS class 'responded'
-      // which can be used to provide visual feedback that a response was recorded
-      //display_element.querySelector('#jspsych-animation-image').className += ' responded';
-
-      response = {
-        key: info.key,
-        rt: info.rt,
-      };
-
-	  // 2250ms is the time according to schillbach after which answering is possible
-      if (trial.response_ends_trial && (response.rt > trial.respond_after)) {
-        end_trial();
-      }
-    };
     
-            // start the response listener
-    if (trial.choices != jsPsych.NO_KEYS) {
-      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
-        callback_function: after_response,
-        valid_responses: trial.choices,
-        rt_method: 'date',
-        persist: true,
-        allow_held_key: false
-      });
-    }
- 
-
     // function to end trial when it is time
     var end_trial = function() {
 
@@ -178,6 +151,36 @@ jsPsych.plugins["video-time"] = (function() {
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
     };
+    
+    // function to handle responses by the subject
+    var after_response = function(info) {
+
+      // after a valid response, the stimulus will have the CSS class 'responded'
+      // which can be used to provide visual feedback that a response was recorded
+      //display_element.querySelector('#jspsych-video-time').className += ' responded';
+
+      response = {
+        key: info.key,
+        rt: info.rt,
+      };
+
+	  // 2250ms is the time according to schillbach after which answering is possible
+      if (trial.response_ends_trial && (response.rt > trial.respond_after)) {
+        end_trial();
+      }
+    };
+    
+    
+    // start the response listener
+    if (trial.choices != jsPsych.NO_KEYS) {
+      var keyboardListener = jsPsych.pluginAPI.getKeyboardResponse({
+        callback_function: after_response,
+        valid_responses: trial.choices,
+        rt_method: 'date',
+        persist: true,
+        allow_held_key: false
+      });
+    }
     
 
     //// end trial if time limit is set
