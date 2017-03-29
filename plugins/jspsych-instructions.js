@@ -95,9 +95,9 @@ jsPsych.plugins.instructions = (function() {
 
         var nav_html = "<div class='jspsych-instructions-nav'>";
         if (current_page != 0 && trial.allow_backward) {
-          nav_html += "<button id='jspsych-instructions-back' class='jspsych-btn'>&lt; Previous</button>";
+          nav_html += "<button id='jspsych-instructions-back' class='jspsych-btn'>&lt; zur\u00fcck</button>";
         }
-        nav_html += "<button id='jspsych-instructions-next' class='jspsych-btn'>Next &gt;</button></div>"
+        nav_html += "<button id='jspsych-instructions-next' class='jspsych-btn'>weiter &gt;</button></div>"
 
         display_element.innerHTML += nav_html;
         
